@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zte.drive.dao.ManagerDao">
+        <resultMap id="question" type="question">
+                <!--
+                主键使用id,必须放在最前面
+                其它字段用result,property为映射类model的属性值,column为表中列字段
+                -->
+                <id property="questionId" column="questionId"/>
+                <result property="questionContent" column="questionContent"/>
+                <result property="type" column="type"/>
+                <result property="a_answer" column="a_answer"/>
+                <result property="b_answer" column="b_answer"/>
+                <result property="c_answer" column="c_answer"/>
+                <result property="d_answer" column="d_answer"/>
+                <result property="answer" column="answer"/>
+                <result property="analyse" column="analyse"/>
+                <result property="picture" column="picture"/>
+        </resultMap>
+
+
+        <!--
+                在t_question中插入一条记录
+                public void insertComment(Comment comment);
+        -->
+        <insert id="insertQuestion" parameterType="question">
+
+                INSERT
+
+                INTO
+
+                    t_question q
+                    (questionContent,q.type,a_answer,b_answer,c_answer,d_answer,answer,analyse,picture)
+
+                VALUES
+
+                (#{questionContent},#{type},#{a_answer},#{b_answer},#{c_answer},#{d_answer},#{answer},#{analyse},#{picture})
+        </insert>
+</mapper>

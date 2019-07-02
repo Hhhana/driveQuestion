@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zte.drive.dao.QuestionDao">
+
+        <resultMap id="question" type="question">
+                <!--
+                主键使用id,必须放在最前面
+                其它字段用result,property为映射类model的属性值,column为表中列字段
+                -->
+                <id property="questionId" column="questionId"/>
+                <result property="questionContent" column="questionContent"/>
+                <result property="type" column="type"/>
+                <result property="a_answer" column="a_answer"/>
+                <result property="b_answer" column="b_answer"/>
+                <result property="c_answer" column="c_answer"/>
+                <result property="d_answer" column="d_answer"/>
+                <result property="answer" column="answer"/>
+                <result property="analyse" column="analyse"/>
+                <result property="picture" column="picture"/>
+        </resultMap>
+
+
+
+        <!--
+           根据问题序号id查找符合条件的t_question表中记录
+           public List<Question> findAllQuestion();
+        -->
+        <select id="findAllQuestion" resultMap="question">
+                SELECT
+                        questionContent,a_answer,b_answer,c_answer,d_answer
+
+                FROM
+
+                        t_question q
+
+                 ORDER BY RAND()
+
+        </select>
+
+        <!--
+           错题查询:根据题目序号questionId返回一条完整记录
+           public List<Question> findWrongQuestion(String questionId);
+        -->
+        <select id="findQuestionById" resultMap="question">
+                SELECT
+
+                      questionContent,a_answer,b_answer,c_answer,d_answer,answer,analyse
+
+                FROM
+
+                      t_question q
+
+                WHERE q.questionId = #{questionId}
+
+        </select>
+
+
+        <!--
+                答案分析:分析用户提交的答案
+                public String checkUserAnswer(@Param("userAnswer")String userAnswer);
+        -->
+        <select id="findAnswerById" resultType="java.lang.String">
+                SELECT
+
+                        q.answer
+
+                FROM
+
+                        t_question q
+
+                WHERE q.questionId = #{questionId}
+
+        </select>
+
+        <!--
+                打印答案:返回序号为questionId的答案解析
+                public String findAnalyse(@Param("questionId")Integer questionId);
+        -->
+        <select id="findAnalyseById" resultType="java.lang.String">
+                SELECT
+
+                      q.analyse
+
+                FROM
+
+                      t_question q
+
+                WHERE q.questionId = #{questionId}
+
+        </select>
+
+
+        <!--
+           根据问题序号id相应题型的t_question表中记录
+           public List<Question> findQuestionByType(Integer type);
+        -->
+        <select id="findQuestionByType" resultMap="question">
+                SELECT
+
+                    questionContent,a_answer,b_answer,c_answer,d_answer
+
+                FROM
+
+                    t_question q
+
+                WHERE q.type = #{type}
+
+                ORDER BY RAND()
+
+        </select>
+
+        <!--
+   根据问题序号id相应题型的t_question表中记录
+   public List<Question> findQuestionByType(Integer type);
+-->
+        <select id="findQuestionByGroup" resultMap="question">
+
+              SELECT
+
+                    *
+
+              FROM (
+
+				      (SELECT
+
+				              table1.questionContent,table1.a_answer,table1.b_answer,table1.c_answer,table1.d_answer
+
+                       FROM (
+
+						    SELECT * FROM t_question q WHERE q.type = 0 ORDER BY RAND() limit 0,5
+
+                           ) AS table1
+                       )
+
+				UNION (
+
+				        SELECT
+
+				              table2.questionContent,table2.a_answer,table2.b_answer,table2.c_answer,table2.d_answer
+
+                        FROM (
+
+						      SELECT * FROM t_question q WHERE type = 1 ORDER BY RAND() limit 0,3
+
+                             ) AS table2
+                      )
+
+				UNION (
+
+						SELECT
+
+						      table3.questionContent,table3.a_answer,table3.b_answer,table3.c_answer,table3.d_answer
+
+                        FROM (
+
+						      SELECT * FROM t_question q WHERE type = 2 ORDER BY RAND() limit 0,2
+
+                             ) AS table3 )
+
+                        ) AS newTable
+
+        </select>
+
+
+
+</mapper>

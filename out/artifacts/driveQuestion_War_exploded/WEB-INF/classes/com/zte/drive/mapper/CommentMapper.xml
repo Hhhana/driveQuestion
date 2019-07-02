@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zte.drive.dao.CommentDao">
+
+        <resultMap id="comment" type="comment">
+                <id property="commentId" column="commentId"/>
+                <result property="questionId" column="questionId"/>
+                <result property="commentContent" column="commentContent"/>
+                <result property="createTime" column="createTime"/>
+                <result property="userId" column="userId"/>
+        </resultMap>
+
+        <!--
+                在questionId对应的问题下插入一条评论
+                public void insertComment(Comment comment);
+        -->
+        <insert id="insertComment" parameterType="comment">
+
+                INSERT
+
+                INTO
+
+                t_comment
+                (questionId,commentContent,createTime,userId)
+
+                VALUES
+
+                (#{questionId},#{commentContent},#{createTime},#{userId})
+        </insert>
+
+        <!--
+                根据questionId查找符合条件的t_comment表中记录
+                public List<Comment> findAllComment(@Param("questionId")Integer questionId);
+        -->
+        <select id="findAllComment" resultMap="comment" >
+                SELECT
+
+                      *
+
+                FROM
+
+                      t_comment c
+
+                where questionId = #{questionId}
+
+        </select>
+
+
+</mapper>
